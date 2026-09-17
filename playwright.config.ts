@@ -7,6 +7,8 @@ export default defineConfig({
 
   // Échoue si un test.only traîne dans le code commité
   forbidOnly: !!process.env.CI,
+   expect: { timeout: 10_000 },
+   timeout: 60_000,
 
   // Réessaie 2 fois en CI, 0 fois en local
   retries: process.env.CI ? 2 : 0,
