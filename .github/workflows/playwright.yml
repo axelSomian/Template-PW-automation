@@ -6,36 +6,36 @@ on:
   pull_request:
     branches: [main]
 
-
 jobs:
-  tests:
+  test:
     runs-on: ubuntu-latest
-    steps:
-      - name: Recuperer le code
-        uses: actions/checkout@v3
 
-      - name: Installer Node.js 
-        uses: actions/setup-node@v3
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 24
 
-      - name: installer deps
+      - name: Installer les dépendances
         run: npm ci
 
-      - name: installer Playwright et les navigateurs
-        run: npx playwright install --with-deps
+      - name: Installer les navigateurs Playwright
+        run: npx playwright install --with-deps chromium
 
-      - name: Run tests
-        run: npx playwright test  --reporter=html
+      - name: Lancer les tests
+        run: npx playwright test --project=chromium
         env:
-          ATC_BASE_URL: ${{ secrets.BASE_URL }}
-          ATC_USER: ${{ secrets.USERNAME }}
-          ATC_PASSWORD: ${{ secrets.PASSWORD }}   
+          ATC_BASE_URL: ${{ secrets.ATC_BASE_URL }}
+          ATC_USER: ${{ secrets.ATC_USER }}
+          ATC_PASSWORD: ${{ secrets.ATC_PASSWORD }}
 
-      - name: publier rapport si eches
+      - name: Publier le rapport si échec
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
-          path: playwright-report
+          path: playwright-report/
           retention-days: 7
