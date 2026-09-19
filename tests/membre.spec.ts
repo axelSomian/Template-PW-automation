@@ -1,23 +1,16 @@
-import {test,expect} from '@playwright/test';
-import { MembersPage } from './pages/memberPage';
-
-let membersPage: MembersPage;
-test.beforeEach(async({page})=>{
-  membersPage = new MembersPage(page);
-    
-    await membersPage.goto();
-})
+import {test, expect} from './fixtures';
 
 
 
-test('have members list',async({page})=>{
+
+test('have members list',async({membersPage})=>{
   
     await expect( membersPage.memberLinks.first()).toBeVisible();
     await expect(membersPage.memberLinks).not.toHaveCount(0)
   
 })
 
-test('search for a member',async({page})=>{
+test('search for a member',async({membersPage})=>{
 
    await expect(membersPage.searchInput).toBeVisible();
    await membersPage.searchMember('Pablo Rims');
@@ -26,7 +19,7 @@ test('search for a member',async({page})=>{
 
 })
 
-test('le filtre de niveau ne montre que le niveau choisi', async ({ page }) => {
+test('le filtre de niveau ne montre que le niveau choisi', async ({ membersPage }) => {
   await expect(membersPage.memberLinks.first()).toBeVisible();          // liste chargée
   await membersPage.filterByLevel('Débutant');
   await expect( membersPage.memberLinks).not.toHaveCount(0);
