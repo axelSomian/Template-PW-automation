@@ -33,8 +33,8 @@ jobs:
           ATC_PASSWORD: ${{ secrets.PASSWORD }}   
 
       - name: publier rapport si eches
-        if: ${{!cancelled()}}
-        uses :actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
         with:
           name: playwright-report
           path: playwright-report
