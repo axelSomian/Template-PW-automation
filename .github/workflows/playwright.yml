@@ -1,0 +1,41 @@
+name: Playwright Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+
+jobs
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Recuperer le code
+        uses: actions/checkout@v3
+
+      - name: Installer Node.js 
+        uses: actions/setup-node@v3
+        with:
+          node-version: 24
+
+      - name: installer deps
+        run: npm ci
+
+      - name: installer Playwright et les navigateurs
+        run: npx playwright install --with-deps
+
+      - name: Run tests
+        run: npx playwright test  --reporter=html
+        env:
+          ATC_BASE_URL: ${{ secrets.BASE_URL }}
+          ATC_USER: ${{ secrets.USERNAME }}
+          ATC_PASSWORD: ${{ secrets.PASSWORD }}   
+
+      - name: publier rapport si eches
+        if: ${{!cancelled()}}
+        uses :actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 7
