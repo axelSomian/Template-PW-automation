@@ -5,6 +5,8 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  repository_dispatch:
+    types: [atc-deployed]
 
 jobs:
   test:
@@ -28,7 +30,7 @@ jobs:
       - name: Lancer les tests
         run: npx playwright test --project=chromium
         env:
-          ATC_BASE_URL: ${{ secrets.ATC_BASE_URL }}
+          ATC_BASE_URL: ${{ github.event.client_payload.url || secrets.ATC_BASE_URL }}
           ATC_USER: ${{ secrets.ATC_USER }}
           ATC_PASSWORD: ${{ secrets.ATC_PASSWORD }}
 
